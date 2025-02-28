@@ -1,0 +1,30 @@
+{
+  "name": "cita-backend",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cita-backend": "file:",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "oracledb": "^6.8.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/joi": "^17.2.2",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.5",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}

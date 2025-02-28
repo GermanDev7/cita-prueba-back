@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+
+# Archivos compilados
+dist/
+
+# Archivos de log
+*.log
+
+# Archivos de entorno
+.env
+
+# Directorios de cache de npm/yarn
+.npm/
+.yarn-cache/
+
+# Configuración de editor
+.vscode/
+.idea/
+
+# Archivos generados por TypeScript
+*.tsbuildinfo
+
+# Otros archivos temporales
+tmp/
+temp/
