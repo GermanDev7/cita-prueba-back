@@ -4,10 +4,12 @@ export function roleMiddleware(allowedRoles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = (req as any).user; // from authMiddleware
     if (!user) {
-      return res.status(401).json({ error: 'Not authenticated' });
+     res.status(401).json({ error: 'Not authenticated' });
+    
     }
     if (!allowedRoles.includes(user.role)) {
-      return res.status(403).json({ error: 'Access denied' });
+       res.status(403).json({ error: 'Access denied' });
+
     }
     next();
   };

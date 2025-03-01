@@ -1,9 +1,19 @@
 import app from './app';
-import {config} from './config/config';
-import {logger} from './middlewares/logger';
+import { config } from './config/config';
+import { logger } from './middlewares/logger';
+import { initDBPool } from './utils/db';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const PORT=config.port || 3000;
+const PORT = config.port;
 
-app.listen(PORT,()=>{
-    logger.info(`Servidor corriendo en el puerto ${PORT}`)
-})
+initDBPool()
+  .then(() => {
+    app.listen(PORT, () => {
+      logger.info(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    logger.error('Error initializing the database pool:', err);
+    process.exit(1);
+  });

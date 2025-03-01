@@ -6,13 +6,14 @@ export class AuthController {
 
     public register = async (req: Request, res: Response) => {
         try {
-            const { firstName, lastName, email, password, role } = req.body;
+            const { firstName, lastName, email, password, role, specialty } = req.body;
             const user = await this.authService.register({
                 firstName,
                 lastName,
                 email,
                 password,
                 role,
+                specialty,
             });
             res.status(201).json(user);
         } catch (error) {

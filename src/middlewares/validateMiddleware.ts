@@ -3,10 +3,14 @@ import { Schema } from 'joi';
 
 export function validateMiddleware(schema: Schema) {
   return (req: Request, res: Response, next: NextFunction) => {
-    const { error } = schema.validate(req.body);
+    //console.log(req.body,'desde middleware')
+    const { error, value } = schema.validate(req.body, { stripUnknown: true });
     if (error) {
-      return res.status(400).json({ error: error.details.map(d => d.message).join(', ') });
+      res.status(400).json({ error: error.details.map(d => d.message).join(', ') });
+      return;
     }
+    //console.log("validated:", req.body);
+    req.body = value;
     next();
   };
 }
