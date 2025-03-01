@@ -62,8 +62,7 @@ export class AppointmentRepository {
       await conn.close();
     }
   }
-
-  // Example method to update appointment status
+  
   public async updateStatus(appointmentId: number, status: string): Promise<void> {
     const conn = await getConnection();
     try {

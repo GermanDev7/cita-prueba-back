@@ -1,4 +1,3 @@
-// src/controllers/DoctorController.ts
 import { Request, Response } from 'express';
 import { DoctorService } from '../services/DoctorService';
 

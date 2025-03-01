@@ -1,4 +1,3 @@
-// src/middlewares/validateMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
 import { Schema } from 'joi';
 
