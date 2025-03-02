@@ -16,9 +16,9 @@ export class AuthService {
         email: string;
         password: string;
         role: string;
-        specialty?: string; 
+        specialty?: string;
     }): Promise<User> {
-    
+
         const hashedPassword = await bcrypt.hash(userData.password, 10);
 
         const user = new User(
@@ -44,7 +44,7 @@ export class AuthService {
         return newUser;
     }
 
-    public async login(email: string, password: string): Promise<string> {
+    public async login(email: string, password: string): Promise<{ token: string, userData: Partial<User> }> {
         const user = await this.userRepo.findByEmail(email);
         if (!user) {
             throw new Error('User not found');
@@ -63,6 +63,13 @@ export class AuthService {
             config.jwtSecret,
             { expiresIn: '1h' }
         );
-        return token;
+        const userData: Partial<User> = {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role
+        };
+        return { token, userData };
     }
 }

@@ -7,7 +7,7 @@ export class AuthController {
     public register = async (req: Request, res: Response) => {
         try {
             const { firstName, lastName, email, password, role, specialty } = req.body;
-            const user = await this.authService.register({
+            const createUser = await this.authService.register({
                 firstName,
                 lastName,
                 email,
@@ -15,7 +15,7 @@ export class AuthController {
                 role,
                 specialty,
             });
-            res.status(201).json(user);
+            res.status(201).json(createUser);
         } catch (error) {
             res.status(400).json({ error: (error as Error).message });
         }
@@ -24,8 +24,9 @@ export class AuthController {
     public login = async (req: Request, res: Response) => {
         try {
             const { email, password } = req.body;
-            const token = await this.authService.login(email, password);
-            res.status(200).json({ token });
+            const { token, userData } = await this.authService.login(email, password);
+
+            res.status(200).json({ token, userData, role: userData.role });
         } catch (error) {
             res.status(401).json({ error: (error as Error).message });
         }

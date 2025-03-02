@@ -6,6 +6,14 @@ import doctorRoutes from './routes/doctorRoutes';
 import { errorHandler } from './middlewares/errorHandler';
 
 const app = express();
+const cors = require('cors');
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
