@@ -132,7 +132,7 @@ export class AppointmentRepository {
       const appointments: Appointment[] = [];
       if (result.rows) {
         for (const row of result.rows) {
-          // Map each row to an Appointment instance.
+         
           const typedRow = row as {
             appointmentId: number;
             dateTime: Date;

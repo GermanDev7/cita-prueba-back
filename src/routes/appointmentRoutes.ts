@@ -1,4 +1,3 @@
-// src/routes/appointmentRoutes.ts
 import { Router } from 'express';
 import { AppointmentController } from '../controllers/AppointmentController';
 import { AppointmentService } from '../services/AppointmentService';
@@ -16,7 +15,6 @@ const doctorRepo = new DoctorRepository();
 const appointmentService = new AppointmentService(appointmentRepo, doctorRepo);
 const appointmentController = new AppointmentController(appointmentService);
 
-// JSON schema for creating an appointment
 const createAppointmentSchema = Joi.object({
   dateTime: Joi.date().required(),
   appointmentType: Joi.string().required(),
@@ -24,18 +22,15 @@ const createAppointmentSchema = Joi.object({
   doctorId: Joi.number().required(),
 });
 
-// JSON schema for updating an appointment (dateTime and appointmentType)
 const updateAppointmentSchema = Joi.object({
   dateTime: Joi.date().required(),
   appointmentType: Joi.string().required(),
 });
 
-// JSON schema for reassigning a doctor
 const reassignDoctorSchema = Joi.object({
   newDoctorId: Joi.number().required(),
 });
 
-// Endpoint to create an appointment
 router.post(
   '/',
   authMiddleware,
@@ -44,14 +39,13 @@ router.post(
   appointmentController.createAppointment
 );
 
-// Endpoint to list appointments for the logged-in user
 router.get(
   '/',
   authMiddleware,
   appointmentController.listAppointments
 );
 
-// Endpoint to update (reschedule) an appointment
+
 router.patch(
   '/:appointmentId',
   authMiddleware,
@@ -60,7 +54,6 @@ router.patch(
   appointmentController.updateAppointment
 );
 
-// Endpoint to reassign a doctor for an appointment
 router.patch(
   '/:appointmentId/reassign',
   authMiddleware,
@@ -69,7 +62,7 @@ router.patch(
   appointmentController.reassignDoctor
 );
 
-// Endpoint to cancel an appointment
+
 router.patch(
   '/:appointmentId/cancel',
   authMiddleware,

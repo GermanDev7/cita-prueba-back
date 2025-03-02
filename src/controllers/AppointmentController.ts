@@ -32,10 +32,10 @@ export class AppointmentController {
       let appointments;
 
       if (user.role === 'patient') {
-        // For patient or admin, we list appointments based on userId (or all for admin)
+      
         appointments = await this.appointmentService.listAppointments(user.userId);
       } else if (user.role === 'doctor') {
-        // For doctors, first get the doctor's profile to obtain the doctor_id
+        
         appointments = await this.appointmentService.listAppointmentsByDoctor(user.userId);
       } else {
         appointments = await this.appointmentService.listAllAppointments();

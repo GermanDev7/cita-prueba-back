@@ -31,8 +31,6 @@ export class AuthService {
         );
 
         const newUser = await this.userRepo.create(user);
-
-        // Create doctor
         if (userData.role === 'doctor') {
             if (!userData.specialty) {
                 throw new Error('Specialty is required for doctor registration');
@@ -57,7 +55,6 @@ export class AuthService {
             throw new Error('Invalid credentials');
         }
 
-        //create JWT
         const token = jwt.sign(
             {
                 userId: user.userId,

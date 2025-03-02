@@ -18,7 +18,7 @@ const createDoctorSchema = Joi.object({
   specialty: Joi.string().required(),
 });
 
-// Create doctor
+
 router.post(
   '/',
   authMiddleware,
@@ -27,7 +27,7 @@ router.post(
   doctorController.createDoctor
 );
 
-// Get doctor by ID
+
 router.get(
   '/:doctorId',
   authMiddleware,
