@@ -19,7 +19,7 @@ let pool: oracledb.Pool;
 export async function initDBPool() {
     try {
         pool = await oracledb.createPool(dbConfig);
-        //console.log('Connection pool started');
+      
 
     } catch (err) {
         console.error('Failed to create pool', err);

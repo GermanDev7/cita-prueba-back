@@ -37,7 +37,7 @@ export class AppointmentRepository {
         `SELECT appointment_id AS "appointmentId",
                 date_time AS "dateTime",
                 appointment_type AS "appointmentType",
-                status,
+                status AS "status",
                 user_id AS "userId",
                 doctor_id AS "doctorId"
          FROM APPOINTMENTS
@@ -113,6 +113,90 @@ export class AppointmentRepository {
       await conn.close();
     }
   }
+
+  public async findAllByDoctor(doctorId: number): Promise<Appointment[]> {
+    const conn = await getConnection();
+    try {
+      const result = await conn.execute(
+        `SELECT appointment_id AS "appointmentId",
+                date_time AS "dateTime",
+                appointment_type AS "appointmentType",
+                status,
+                user_id AS "userId",
+                doctor_id AS "doctorId"
+         FROM APPOINTMENTS
+         WHERE doctor_id = :doctorId`,
+        { doctorId }
+      );
+      
+      const appointments: Appointment[] = [];
+      if (result.rows) {
+        for (const row of result.rows) {
+          // Map each row to an Appointment instance.
+          const typedRow = row as {
+            appointmentId: number;
+            dateTime: Date;
+            appointmentType: string;
+            status: string;
+            userId: number;
+            doctorId: number;
+          };
+          appointments.push(new Appointment(
+            typedRow.appointmentId,
+            typedRow.dateTime,
+            typedRow.appointmentType,
+            typedRow.status,
+            typedRow.userId,
+            typedRow.doctorId
+          ));
+        }
+      }
+      return appointments;
+    } finally {
+      await conn.close();
+    }
+  }
+
+  public async findAllAppointments(): Promise<Appointment[]> {
+    const conn = await getConnection();
+    try {
+      const result = await conn.execute(
+        `SELECT appointment_id AS "appointmentId",
+                date_time AS "dateTime",
+                appointment_type AS "appointmentType",
+                status,
+                user_id AS "userId",
+                doctor_id AS "doctorId"
+         FROM APPOINTMENTS`
+      );
+      const appointments: Appointment[] = [];
+      if (result.rows) {
+        for (const row of result.rows) {
+          const typedRow = row as {
+            appointmentId: number;
+            dateTime: Date;
+            appointmentType: string;
+            status: string;
+            userId: number;
+            doctorId: number;
+          };
+          appointments.push(new Appointment(
+            typedRow.appointmentId,
+            typedRow.dateTime,
+            typedRow.appointmentType,
+            typedRow.status,
+            typedRow.userId,
+            typedRow.doctorId
+          ));
+        }
+      }
+      return appointments;
+    } finally {
+      await conn.close();
+    }
+  }
+  
+
 
 
   public async update(appointment: Appointment): Promise<Appointment> {
@@ -206,6 +290,24 @@ export class AppointmentRepository {
         }
       }
       return appointments;
+    } finally {
+      await conn.close();
+    }
+  }
+
+  public async hasConflictingPatientAppointment(userId: number, dateTime: Date): Promise<boolean> {
+    const conn = await getConnection();
+    try {
+      const result = await conn.execute(
+        `SELECT COUNT(*) AS "count" 
+         FROM APPOINTMENTS 
+         WHERE user_id = :userId 
+           AND status = 'scheduled'
+           AND date_time = :dateTime`,
+        { userId, dateTime }
+      );
+      const row = result.rows?.[0] as { count: number } | undefined;
+      return row ? row.count > 0 : false;
     } finally {
       await conn.close();
     }

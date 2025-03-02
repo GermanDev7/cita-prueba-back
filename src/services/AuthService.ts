@@ -18,7 +18,7 @@ export class AuthService {
         role: string;
         specialty?: string; 
     }): Promise<User> {
-        //console.log("Data in AuthService.register:", userData);
+    
         const hashedPassword = await bcrypt.hash(userData.password, 10);
 
         const user = new User(
@@ -29,11 +29,10 @@ export class AuthService {
             hashedPassword,
             userData.role
         );
-        //console.log(userData)
 
         const newUser = await this.userRepo.create(user);
-        //console.log(userData)
-        // Si el usuario es doctor, crea el perfil en DOCTORS automáticamente
+
+        // Create doctor
         if (userData.role === 'doctor') {
             if (!userData.specialty) {
                 throw new Error('Specialty is required for doctor registration');
