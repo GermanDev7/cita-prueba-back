@@ -38,6 +38,6 @@ router.get(
 router.get(
   '/',
   authMiddleware,
-  doctorController.getDoctorsBySpecialty)
+  doctorController.getDoctors)
 
 export default router;

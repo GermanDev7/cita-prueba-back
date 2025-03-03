@@ -32,42 +32,51 @@ export class AppointmentRepository {
 
   public async findById(appointmentId: number): Promise<Appointment | null> {
     const conn = await getConnection();
-    try {
-      const result = await conn.execute(
-        `SELECT appointment_id AS "appointmentId",
-                date_time AS "dateTime",
-                appointment_type AS "appointmentType",
-                status AS "status",
-                user_id AS "userId",
-                doctor_id AS "doctorId"
-         FROM APPOINTMENTS
-         WHERE appointment_id = :appointmentId`,
-        { appointmentId }
-      );
-      const row = result.rows?.[0];
-      if (!row) return null;
+  try {
+    const result = await conn.execute(
+      `SELECT 
+         a.appointment_id AS "appointmentId",
+         a.date_time AS "dateTime",
+         a.appointment_type AS "appointmentType",
+         a.status AS "status",
+         a.user_id AS "userId",
+         a.doctor_id AS "doctorId",
+         -- Unimos con DOCTORS y USERS para obtener el nombre del doctor
+         du.first_name || ' ' || du.last_name AS "doctorName"
+       FROM APPOINTMENTS a
+       JOIN DOCTORS d ON a.doctor_id = d.doctor_id
+       JOIN USERS du ON d.user_id = du.user_id
+       WHERE a.appointment_id = :appointmentId`,
+      { appointmentId }
+    );
 
-      const typedRow = row as {
-        appointmentId: number;
-        dateTime: Date;
-        appointmentType: string;
-        status: string;
-        userId: number;
-        doctorId: number;
-      };
+    const row = result.rows?.[0];
+    if (!row) return null;
 
-      return new Appointment(
-        typedRow.appointmentId,
-        typedRow.dateTime,
-        typedRow.appointmentType,
-        typedRow.status,
-        typedRow.userId,
-        typedRow.doctorId
-      );
-    } finally {
-      await conn.close();
-    }
+    const typedRow = row as {
+      appointmentId: number;
+      dateTime: Date;
+      appointmentType: string;
+      status: string;
+      userId: number;
+      doctorId: number;
+      doctorName: string;
+    };
+
+    // Retornamos un objeto con el campo extra "doctorName"
+    return {
+      appointmentId: typedRow.appointmentId,
+      dateTime: typedRow.dateTime,
+      appointmentType: typedRow.appointmentType,
+      status: typedRow.status,
+      userId: typedRow.userId,
+      doctorId: typedRow.doctorId,
+      doctorName: typedRow.doctorName
+    };
+  } finally {
+    await conn.close();
   }
+}
 
 
 
@@ -239,19 +248,15 @@ export class AppointmentRepository {
     }
   }
 
-
-
-
   public async update(appointment: Appointment): Promise<Appointment> {
     const conn = await getConnection();
     try {
       await conn.execute(
         `UPDATE APPOINTMENTS
-         SET date_time = :dateTime, appointment_type = :appointmentType
+         SET date_time = :dateTime
          WHERE appointment_id = :appointmentId`,
         {
           dateTime: appointment.dateTime,
-          appointmentType: appointment.appointmentType,
           appointmentId: appointment.appointmentId,
         },
         { autoCommit: true }
@@ -261,7 +266,6 @@ export class AppointmentRepository {
       await conn.close();
     }
   }
-
 
   public async updateDoctor(appointmentId: number, doctorId: number): Promise<void> {
     const conn = await getConnection();

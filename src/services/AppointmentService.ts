@@ -76,7 +76,7 @@ export class AppointmentService {
 
 
 
-  public async updateAppointment(appointmentId: number, data: { dateTime: Date; appointmentType: string }): Promise<Appointment> {
+  public async updateAppointment(appointmentId: number, data: { dateTime: Date }): Promise<Appointment> {
 
     const appointment = await this.appointmentRepo.findById(appointmentId);
     if (!appointment) {
@@ -114,7 +114,6 @@ export class AppointmentService {
     }
 
     appointment.dateTime = data.dateTime;
-    appointment.appointmentType = data.appointmentType;
     return this.appointmentRepo.update(appointment);
   }
 
@@ -150,7 +149,7 @@ export class AppointmentService {
       throw new Error('Appointment not found');
     }
 
-    console.log(appointment)
+    
     if (appointment.status !== 'scheduled') {
       throw new Error('Only scheduled appointments can be canceled');
     }

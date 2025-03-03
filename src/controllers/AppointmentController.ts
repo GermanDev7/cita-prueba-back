@@ -74,10 +74,9 @@ export class AppointmentController {
   public updateAppointment = async (req: Request, res: Response): Promise<void> => {
     try {
       const { appointmentId } = req.params;
-      const { dateTime, appointmentType } = req.body;
+      const { dateTime } = req.body;
       const updatedAppointment = await this.appointmentService.updateAppointment(Number(appointmentId), {
-        dateTime: new Date(dateTime),
-        appointmentType
+        dateTime: new Date(dateTime)
       });
       res.status(200).json(updatedAppointment);
     } catch (error) {

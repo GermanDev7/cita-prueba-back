@@ -56,7 +56,7 @@ export class DoctorRepository {
         }
     }
 
-    public async findDoctorsBySpecialty(specialty: string): Promise<{ doctorId: number; doctorName: string }[]> {
+    public async getDoctors(): Promise<{ doctorId: number; doctorName: string }[]> {
         const conn = await getConnection();
         try {
             const result = await conn.execute(
@@ -64,9 +64,8 @@ export class DoctorRepository {
                d.doctor_id AS "doctorId", 
                u.first_name || ' ' || u.last_name AS "doctorName"
              FROM DOCTORS d
-             JOIN USERS u ON d.user_id = u.user_id
-             WHERE d.specialty = :specialty`,
-                { specialty }
+             JOIN USERS u ON d.user_id = u.user_id`,
+
             );
             const doctors: { doctorId: number; doctorName: string }[] = [];
             if (result.rows) {

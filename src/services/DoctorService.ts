@@ -17,7 +17,7 @@ export class DoctorService {
     return this.doctorRepo.getDoctorById(doctorId);
   }
 
-  public async getDoctorsBySpecialty(specialty: string): Promise<{ doctorId: number; doctorName: string }[]> {
-    return this.doctorRepo.findDoctorsBySpecialty(specialty);
+  public async getDoctors(): Promise<{ doctorId: number; doctorName: string }[]> {
+    return this.doctorRepo.getDoctors();
   }
 }

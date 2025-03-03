@@ -24,7 +24,6 @@ const createAppointmentSchema = Joi.object({
 
 const updateAppointmentSchema = Joi.object({
   dateTime: Joi.date().required(),
-  appointmentType: Joi.string().required(),
 });
 
 const reassignDoctorSchema = Joi.object({
