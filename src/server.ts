@@ -1,7 +1,7 @@
 import app from './app';
 import { config } from './config/config';
 import { logger } from './middlewares/logger';
-import { initDBPool } from './utils/db';
+import { initDBPool } from './db/db';
 import dotenv from 'dotenv';
 dotenv.config();
 

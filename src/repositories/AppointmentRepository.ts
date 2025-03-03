@@ -1,5 +1,5 @@
 
-import { getConnection } from '../utils/db';
+import { getConnection } from '../db/db';
 import { Appointment } from '../models/Appointment';
 import oracledb from 'oracledb';
 

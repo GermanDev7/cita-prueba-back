@@ -1,4 +1,4 @@
-import { getConnection } from "../utils/db";
+import { getConnection } from "../db/db";
 import oracledb from 'oracledb';
 import { User } from "../models/User";
 
