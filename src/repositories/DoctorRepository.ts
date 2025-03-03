@@ -3,7 +3,7 @@ import { Doctor } from '../models/Doctor';
 import oracledb from 'oracledb';
 
 export class DoctorRepository {
-   
+
     public async create(doctor: Doctor): Promise<Doctor> {
         const conn = await getConnection();
         try {
@@ -39,7 +39,7 @@ export class DoctorRepository {
             const row = result.rows?.[0];
             if (!row) return null;
 
-         
+
             const typedRow = row as {
                 DOCTOR_ID: number;
                 USER_ID: number;
@@ -56,8 +56,36 @@ export class DoctorRepository {
         }
     }
 
+    public async findDoctorsBySpecialty(specialty: string): Promise<{ doctorId: number; doctorName: string }[]> {
+        const conn = await getConnection();
+        try {
+            const result = await conn.execute(
+                `SELECT 
+               d.doctor_id AS "doctorId", 
+               u.first_name || ' ' || u.last_name AS "doctorName"
+             FROM DOCTORS d
+             JOIN USERS u ON d.user_id = u.user_id
+             WHERE d.specialty = :specialty`,
+                { specialty }
+            );
+            const doctors: { doctorId: number; doctorName: string }[] = [];
+            if (result.rows) {
+                for (const row of result.rows) {
+                    const typedRow = row as { doctorId: number; doctorName: string };
+                    doctors.push({
+                        doctorId: typedRow.doctorId,
+                        doctorName: typedRow.doctorName
+                    });
+                }
+            }
+            return doctors;
+        } finally {
+            await conn.close();
+        }
+    }
 
-  
+
+
     public async getDoctorProfileByUserId(userId: number): Promise<{ doctor: Doctor; firstName: string; lastName: string } | null> {
         const conn = await getConnection();
         try {

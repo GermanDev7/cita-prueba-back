@@ -75,40 +75,52 @@ export class AppointmentRepository {
     const conn = await getConnection();
     try {
       const result = await conn.execute(
-        `SELECT appointment_id AS "appointmentId",
-                date_time AS "dateTime",
-                appointment_type AS "appointmentType",
-                status,
-                user_id AS "userId",
-                doctor_id AS "doctorId"
-         FROM APPOINTMENTS
-         WHERE user_id = :userId`,
+        `SELECT
+         a.appointment_id         AS "appointmentId",
+         a.date_time              AS "dateTime",
+         a.appointment_type       AS "appointmentType",
+         a.status                 AS "status",
+         a.user_id                AS "userId",
+         a.doctor_id              AS "doctorId",
+         u.first_name             AS "patientFirstName",
+         u.last_name              AS "patientLastName",
+         du.first_name            AS "doctorFirstName",
+         du.last_name             AS "doctorLastName"
+       FROM APPOINTMENTS a
+       JOIN USERS u 
+         ON a.user_id = u.user_id
+       JOIN DOCTORS d
+         ON a.doctor_id = d.doctor_id
+       JOIN USERS du
+         ON d.user_id = du.user_id
+       WHERE a.user_id = :userId`,
         { userId }
       );
-      const appointments: Appointment[] = [];
-      if (result.rows) {
-        for (const row of result.rows) {
-          const typedRow = row as {
-            appointmentId: number;
-            dateTime: Date;
-            appointmentType: string;
-            status: string;
-            userId: number;
-            doctorId: number;
-          };
-          appointments.push(
-            new Appointment(
-              typedRow.appointmentId,
-              typedRow.dateTime,
-              typedRow.appointmentType,
-              typedRow.status,
-              typedRow.userId,
-              typedRow.doctorId
-            )
-          );
-        }
-      }
-      return appointments;
+
+      return (result.rows || []).map(row => {
+        const typedRow = row as {
+          appointmentId: number;
+          dateTime: Date;
+          appointmentType: string;
+          status: string;
+          userId: number;
+          doctorId: number;
+          patientFirstName: string;
+          patientLastName: string;
+          doctorFirstName: string;
+          doctorLastName: string;
+        };
+        return {
+          appointmentId: typedRow.appointmentId,
+          dateTime: typedRow.dateTime,
+          appointmentType: typedRow.appointmentType,
+          status: typedRow.status,
+          userId: typedRow.userId,
+          doctorId: typedRow.doctorId,
+          patientName: `${typedRow.patientFirstName} ${typedRow.patientLastName}`,
+          doctorName: `${typedRow.doctorFirstName} ${typedRow.doctorLastName}`
+        };
+      });
     } finally {
       await conn.close();
     }
@@ -118,40 +130,53 @@ export class AppointmentRepository {
     const conn = await getConnection();
     try {
       const result = await conn.execute(
-        `SELECT appointment_id AS "appointmentId",
-                date_time AS "dateTime",
-                appointment_type AS "appointmentType",
-                status,
-                user_id AS "userId",
-                doctor_id AS "doctorId"
-         FROM APPOINTMENTS
-         WHERE doctor_id = :doctorId`,
+        `SELECT
+         a.appointment_id         AS "appointmentId",
+         a.date_time              AS "dateTime",
+         a.appointment_type       AS "appointmentType",
+         a.status                 AS "status",
+         a.user_id                AS "userId",
+         a.doctor_id              AS "doctorId",
+         u.first_name             AS "patientFirstName",
+         u.last_name              AS "patientLastName",
+         du.first_name            AS "doctorFirstName",
+         du.last_name             AS "doctorLastName"
+       FROM APPOINTMENTS a
+       JOIN USERS u 
+         ON a.user_id = u.user_id
+       JOIN DOCTORS d
+         ON a.doctor_id = d.doctor_id
+       JOIN USERS du
+         ON d.user_id = du.user_id
+       WHERE a.doctor_id = :doctorId`,
         { doctorId }
       );
-      
-      const appointments: Appointment[] = [];
-      if (result.rows) {
-        for (const row of result.rows) {
-         
-          const typedRow = row as {
-            appointmentId: number;
-            dateTime: Date;
-            appointmentType: string;
-            status: string;
-            userId: number;
-            doctorId: number;
-          };
-          appointments.push(new Appointment(
-            typedRow.appointmentId,
-            typedRow.dateTime,
-            typedRow.appointmentType,
-            typedRow.status,
-            typedRow.userId,
-            typedRow.doctorId
-          ));
-        }
-      }
-      return appointments;
+
+      return (result.rows || []).map(row => {
+        const typedRow = row as {
+          appointmentId: number;
+          dateTime: Date;
+          appointmentType: string;
+          status: string;
+          userId: number;
+          doctorId: number;
+          patientFirstName: string;
+          patientLastName: string;
+          doctorFirstName: string;
+          doctorLastName: string;
+        };
+
+        return {
+          appointmentId: typedRow.appointmentId,
+          dateTime: typedRow.dateTime,
+          appointmentType: typedRow.appointmentType,
+          status: typedRow.status,
+          userId: typedRow.userId,
+          doctorId: typedRow.doctorId,
+          patientName: `${typedRow.patientFirstName} ${typedRow.patientLastName}`,
+          doctorName: `${typedRow.doctorFirstName} ${typedRow.doctorLastName}`
+        };
+      });
     } finally {
       await conn.close();
     }
@@ -161,41 +186,59 @@ export class AppointmentRepository {
     const conn = await getConnection();
     try {
       const result = await conn.execute(
-        `SELECT appointment_id AS "appointmentId",
-                date_time AS "dateTime",
-                appointment_type AS "appointmentType",
-                status,
-                user_id AS "userId",
-                doctor_id AS "doctorId"
-         FROM APPOINTMENTS`
+        `SELECT
+           a.appointment_id         AS "appointmentId",
+           a.date_time              AS "dateTime",
+           a.appointment_type       AS "appointmentType",
+           a.status                 AS "status",
+           a.user_id                AS "userId",
+           a.doctor_id              AS "doctorId",
+           -- Nombre y apellido del paciente
+           u.first_name             AS "patientFirstName",
+           u.last_name              AS "patientLastName",
+           -- Nombre y apellido del doctor
+           du.first_name            AS "doctorFirstName",
+           du.last_name             AS "doctorLastName"
+         FROM APPOINTMENTS a
+         JOIN USERS u 
+           ON a.user_id = u.user_id
+         JOIN DOCTORS d
+           ON a.doctor_id = d.doctor_id
+         JOIN USERS du
+           ON d.user_id = du.user_id`
       );
-      const appointments: Appointment[] = [];
-      if (result.rows) {
-        for (const row of result.rows) {
-          const typedRow = row as {
-            appointmentId: number;
-            dateTime: Date;
-            appointmentType: string;
-            status: string;
-            userId: number;
-            doctorId: number;
-          };
-          appointments.push(new Appointment(
-            typedRow.appointmentId,
-            typedRow.dateTime,
-            typedRow.appointmentType,
-            typedRow.status,
-            typedRow.userId,
-            typedRow.doctorId
-          ));
-        }
-      }
-      return appointments;
+
+      // Mapeamos cada fila a un objeto que incluya los nombres
+      return (result.rows || []).map(row => {
+        const typedRow = row as {
+          appointmentId: number;
+          dateTime: Date;
+          appointmentType: string;
+          status: string;
+          userId: number;
+          doctorId: number;
+          patientFirstName: string;
+          patientLastName: string;
+          doctorFirstName: string;
+          doctorLastName: string;
+        };
+
+        return {
+          appointmentId: typedRow.appointmentId,
+          dateTime: typedRow.dateTime,
+          appointmentType: typedRow.appointmentType,
+          status: typedRow.status,
+          userId: typedRow.userId,
+          doctorId: typedRow.doctorId,
+          patientName: `${typedRow.patientFirstName} ${typedRow.patientLastName}`,
+          doctorName: `${typedRow.doctorFirstName} ${typedRow.doctorLastName}`
+        };
+      });
     } finally {
       await conn.close();
     }
   }
-  
+
 
 
 

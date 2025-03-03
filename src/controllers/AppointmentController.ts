@@ -9,7 +9,7 @@ export class AppointmentController {
     try {
       const { dateTime, appointmentType, userId, doctorId } = req.body;
       const appointment = await this.appointmentService.createAppointment({
-        dateTime: new Date(dateTime),
+        dateTime,
         appointmentType,
         userId,
         doctorId

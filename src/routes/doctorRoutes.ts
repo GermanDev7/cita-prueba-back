@@ -22,7 +22,7 @@ const createDoctorSchema = Joi.object({
 router.post(
   '/',
   authMiddleware,
-  roleMiddleware(['admin']), 
+  roleMiddleware(['admin']),
   validateMiddleware(createDoctorSchema),
   doctorController.createDoctor
 );
@@ -34,5 +34,10 @@ router.get(
   roleMiddleware(['admin', 'doctor', 'patient']),
   doctorController.getDoctor
 );
+
+router.get(
+  '/',
+  authMiddleware,
+  doctorController.getDoctorsBySpecialty)
 
 export default router;

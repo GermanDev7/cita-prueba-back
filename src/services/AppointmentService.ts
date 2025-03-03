@@ -26,18 +26,18 @@ export class AppointmentService {
     const schedules = await this.doctorRepo.getSchedulesByDoctorAndDay(data.doctorId, dayOfWeek);
 
     if (!this.isWithinSchedule(data.dateTime, schedules)) {
-      throw new Error('Doctor is not available at this time');
+      throw new Error('Doctor no disponible en ese horario');
     }
 
     
     const doctorConflict = await this.appointmentRepo.hasConflictingAppointment(data.doctorId, data.dateTime);
     if (doctorConflict) {
-      throw new Error('There is already an appointment for this doctor at this time');
+      throw new Error('El doctor ya tiene una cita en ese horario');
     }
 
     const patientConflict = await this.appointmentRepo.hasConflictingPatientAppointment(data.userId, data.dateTime);
     if (patientConflict) {
-      throw new Error('The patient already has an appointment at this time');
+      throw new Error('El paciente tiene una cita en ese horario');
     }
 
   
