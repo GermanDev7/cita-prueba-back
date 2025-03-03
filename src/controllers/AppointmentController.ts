@@ -20,6 +20,27 @@ export class AppointmentController {
     }
   };
 
+  public getAppointment = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { appointmentId } = req.params;
+      const id = parseInt(appointmentId, 10);
+      if (isNaN(id)) {
+        res.status(400).json({ error: 'Invalid appointment ID' });
+        return;
+      }
+
+      const appointment = await this.appointmentService.getAppointmentById(id);
+      if (!appointment) {
+        res.status(404).json({ error: 'Appointment not found' });
+        return;
+      }
+
+      res.status(200).json(appointment);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : 'Unexpected error' });
+    }
+  };
+
 
   public listAppointments = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -32,10 +53,10 @@ export class AppointmentController {
       let appointments;
 
       if (user.role === 'patient') {
-      
+
         appointments = await this.appointmentService.listAppointments(user.userId);
       } else if (user.role === 'doctor') {
-        
+
         appointments = await this.appointmentService.listAppointmentsByDoctor(user.userId);
       } else {
         appointments = await this.appointmentService.listAllAppointments();

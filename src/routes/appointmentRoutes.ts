@@ -45,6 +45,13 @@ router.get(
   appointmentController.listAppointments
 );
 
+router.get(
+  '/:appointmentId',
+  authMiddleware,
+  roleMiddleware(['admin', 'patient']),
+  appointmentController.getAppointment
+);
+
 
 router.patch(
   '/:appointmentId',
@@ -57,7 +64,7 @@ router.patch(
 router.patch(
   '/:appointmentId/reassign',
   authMiddleware,
-  roleMiddleware(['admin']), 
+  roleMiddleware(['admin']),
   validateMiddleware(reassignDoctorSchema),
   appointmentController.reassignDoctor
 );
