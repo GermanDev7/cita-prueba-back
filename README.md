@@ -1,19 +1,5 @@
 # Nombre del Proyecto
-
-Una breve descripción del proyecto, su objetivo y funcionalidades principales.
-
-## Tabla de Contenidos
-
-- [Descripción](#descripción)
-- [Características](#características)
-- [Tecnologías](#tecnologías)
-- [Instalación](#instalación)
-- [Uso](#uso)
-- [Scripts Disponibles](#scripts-disponibles)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Contribuir](#contribuir)
-- [Licencia](#licencia)
-- [Contacto](#contacto)
+ Cita back
 
 ## Descripción
 
