@@ -63,7 +63,6 @@ export class AppointmentRepository {
       doctorName: string;
     };
 
-    // Retornamos un objeto con el campo extra "doctorName"
     return {
       appointmentId: typedRow.appointmentId,
       dateTime: typedRow.dateTime,
@@ -217,7 +216,7 @@ export class AppointmentRepository {
            ON d.user_id = du.user_id`
       );
 
-      // Mapeamos cada fila a un objeto que incluya los nombres
+   
       return (result.rows || []).map(row => {
         const typedRow = row as {
           appointmentId: number;
