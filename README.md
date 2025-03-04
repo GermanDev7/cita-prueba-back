@@ -47,19 +47,35 @@ npm run dev
 
 ## Estructura del proyexcto
 
-cita-prueba-back/
-src/
-controllers/      # Controladores para manejar la lógica de la API
-models/           # Modelos y esquemas de datos
-routes/           # Definición de rutas de la API
-services/         # Lógica de negocio y comunicación con la base de datos
-middlewares/      # Middleware para autenticación, validación, etc.
-db/               # Conexion a la base de datos
-app.ts            # Configuración general de la aplicación
-server.ts         # Punto de entrada del servidor
-.env.example          # Archivo de ejemplo para las variables de entorno
- package.json
-README.md
+```bash
+.
+├── src
+│   ├── config
+│   ├── controllers
+│   │   ├── AppointmentController.ts
+│   │   ├── AuthController.ts
+│   │   └── DoctorController.ts
+│   ├── db
+│   │   └── db.ts
+│   ├── middlewares
+│   ├── models
+│   ├── repositories
+│   │   ├── AppointmentRepository.ts
+│   │   ├── DoctorRepository.ts
+│   │   └── UserRepository.ts
+│   ├── routes
+│   ├── services
+│   │   ├── AppointmentService.ts
+│   │   └── DoctorService.ts
+│   ├── app.ts
+│   └── server.ts
+├── .env
+├── .env.example
+├── .gitignore
+├── package-lock.json
+├── package.json
+└── README.md
+
 
 ## Licencia
 
